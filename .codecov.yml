@@ -2,7 +2,10 @@
 # the root folder.
 #comment: false
 
+
+
 codecov:
+  branch: loaddata_headers
   notify:
     require_ci_to_pass: no
 

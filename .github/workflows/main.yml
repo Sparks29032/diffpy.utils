@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - CI
+      - codecov_settings
   pull_request:
   workflow_dispatch:
 
@@ -19,7 +19,7 @@ jobs:
       - name: check out diffpy.utils
         uses: actions/checkout@v3
         with:
-          repository: diffpy/diffpy.utils
+          repository: Sparks29032/diffpy.utils
           path: .
 
       - name: initialize miniconda
@@ -49,6 +49,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate test
+          cat src/diffpy/utils/parsers/loaddata.py
           coverage run run_tests.py
           coverage report -m
           codecov
