@@ -5,7 +5,6 @@
 
 
 codecov:
-  branch: loaddata_headers
   notify:
     require_ci_to_pass: no
 
