@@ -1,10 +1,7 @@
 $PROJECT = 'diffpy.utils'
 $ACTIVITIES = [
-              'tag',  # Creates a tag for the new version number
-              'push_tag',  # Pushes the tag up to the $TAG_REMOTE
               'changelog', # Create a CHANGELOG.rst using news directory
-              'ghrelease',  # Creates a Github release entry for the new tag
-              'pypi',  # Sends the package to pypi
+              'tag'  # Creates a tag for the new version number
                ]
 $CHANGELOG_FILENAME = 'CHANGELOG.rst'
 $CHANGELOG_TEMPLATE = 'TEMPLATE.rst'
