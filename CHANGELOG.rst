@@ -1,2 +1,2 @@
-Release notes
-#############
+diffpy.utils Change Log
+#######################
