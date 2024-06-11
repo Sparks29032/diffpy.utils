@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
-import sys
 import pathlib
-sys.path.append((pathlib.Path.cwd().parent.absolute() / "src").as_posix())
+import sys
 
 import diffpy.utils.tests
+
+sys.path.append((pathlib.Path.cwd().parent.absolute() / "src").as_posix())
+
+
 assert diffpy.utils.tests.test().wasSuccessful()

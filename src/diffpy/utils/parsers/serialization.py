@@ -13,18 +13,26 @@
 #
 ##############################################################################
 
-import pathlib
 import json
-import numpy
-
-from .custom_exceptions import UnsupportedTypeError, ImproperSizeError
+import pathlib
 import warnings
 
+import numpy
+
+from .custom_exceptions import ImproperSizeError, UnsupportedTypeError
+
 # FIXME: add support for yaml, xml
-supported_formats = ['.json']
+supported_formats = [".json"]
 
 
-def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_path=True, serial_file=None):
+def serialize_data(
+    filename,
+    hdata: dict,
+    data_table,
+    dt_colnames=None,
+    show_path=True,
+    serial_file=None,
+):
     """Serialize file data into a dictionary. Can also save dictionary into a serial language file. Dictionary is
     formatted as {filename: data}.
 
@@ -39,13 +47,14 @@ def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_pat
     data_table: list or ndarray
         Data table.
     dt_colnames: list
-        Names of each column in data_table. Every name in data_table_cols will be put into the Dictionary as a key with
-        a value of that column in data_table (stored as a List). Put None for columns without names. If dt_cols has less
-        non-None entries than columns in data_table, the pair {'data table': data_table} will be put in the dictionary.
+        Names of each column in data_table. Every name in data_table_cols will be put into the Dictionary
+        as a key with a value of that column in data_table (stored as a List). Put None for columns
+        without names. If dt_cols has less non-None entries than columns in data_table,
+        the pair {'data table': data_table} will be put in the dictionary.
         (Default None: only entry {'data table': data_table} will be added to dictionary.)
     show_path: bool
-        include a path element in the database entry (default True). If 'path' is not included in hddata, extract path
-        from filename.
+        include a path element in the database entry (default True). If 'path' is not included in hddata,
+         extract path from filename.
     serial_file
         Serial language file to dump dictionary into. If None (defualt), no dumping will occur.
 
@@ -61,8 +70,8 @@ def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_pat
     # handle getting name of file for variety of filename types
     abs_path = pathlib.Path(filename).resolve()
     # add path to start of data if requested
-    if show_path and 'path' not in hdata.keys():
-        data.update({'path': abs_path.as_posix()})
+    if show_path and "path" not in hdata.keys():
+        data.update({"path": abs_path.as_posix()})
     # title the entry with name of file (taken from end of path)
     title = abs_path.name
 
@@ -84,17 +93,21 @@ def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_pat
             colname = dt_colnames[idx]
             if colname is not None:
                 if colname in hdata.keys():
-                    warnings.warn(f'Entry \'{colname}\' in hdata has been overwritten by a data_table entry.',
-                                  RuntimeWarning)
+                    warnings.warn(
+                        f"Entry '{colname}' in hdata has been overwritten by a data_table entry.",
+                        RuntimeWarning,
+                    )
                 data.update({colname: list(data_table[:, idx])})
                 named_columns += 1
 
     # finally add data_table as an entry named 'data table' if not all columns were parsed
     if named_columns < max_columns:
-        if 'data table' in data.keys():
-            warnings.warn('Entry \'data table\' in hdata has been overwritten by data_table.',
-                          RuntimeWarning)
-        data.update({'data table': data_table})
+        if "data table" in data.keys():
+            warnings.warn(
+                "Entry 'data table' in hdata has been overwritten by data_table.",
+                RuntimeWarning,
+            )
+        data.update({"data table": data_table})
 
     # parse name using pathlib and generate dictionary entry
     entry = {title: data}
@@ -120,7 +133,7 @@ def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_pat
         pass
 
     # json
-    if extension == '.json':
+    if extension == ".json":
         # cannot serialize numpy arrays
         class NumpyEncoder(json.JSONEncoder):
             def default(self, data_obj):
@@ -130,16 +143,16 @@ def serialize_data(filename, hdata: dict, data_table, dt_colnames=None, show_pat
 
         # dump if non-existing
         if not existing:
-            with open(serial_file, 'w') as jsonfile:
+            with open(serial_file, "w") as jsonfile:
                 file_data = entry  # for return
                 json.dump(file_data, jsonfile, indent=2, cls=NumpyEncoder)
 
         # update if existing
         else:
-            with open(serial_file, 'r') as json_read:
+            with open(serial_file, "r") as json_read:
                 file_data = json.load(json_read)
                 file_data.update(entry)
-            with open(serial_file, 'w') as json_write:
+            with open(serial_file, "w") as json_write:
                 # dump to string first for formatting
                 json.dump(file_data, json_write, indent=2, cls=NumpyEncoder)
 
@@ -177,12 +190,15 @@ def deserialize_data(filename, filetype=None):
     return_dict = {}
 
     # json
-    if extension == '.json':
-        with open(filename, 'r') as json_file:
+    if extension == ".json":
+        with open(filename, "r") as json_file:
             j_dict = json.load(json_file)
             return_dict = j_dict
 
     if len(return_dict) == 0:
-        warnings.warn(f'Loaded dictionary is empty. Possibly due to improper file type.', RuntimeWarning)
+        warnings.warn(
+            "Loaded dictionary is empty. Possibly due to improper file type.",
+            RuntimeWarning,
+        )
 
     return return_dict

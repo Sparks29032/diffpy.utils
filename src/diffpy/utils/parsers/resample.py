@@ -23,7 +23,8 @@ import numpy
 def wsinterp(x, xp, fp, left=None, right=None):
     """One-dimensional Whittaker-Shannon interpolation.
 
-    This uses the Whittaker-Shannon interpolation formula to interpolate the value of fp (array), which is defined over
+    This uses the Whittaker-Shannon interpolation formula to interpolate the value of fp (array),
+     which is defined over
     xp (array), at x (array or float).
 
     Parameters
@@ -35,7 +36,8 @@ def wsinterp(x, xp, fp, left=None, right=None):
     fp: ndarray
         Function to be interpolated.
     left: float
-        If given, set fp for x < xp[0] to left. Otherwise, if left is None (default) or not given, set fp for x < xp[0]
+        If given, set fp for x < xp[0] to left. Otherwise, if left is None (default) or not given,
+         set fp for x < xp[0]
         to fp evaluated at xp[-1].
     right: float
         If given, set fp for x > xp[-1] to right. Otherwise, if right is None (default) or not given, set fp for
@@ -100,30 +102,29 @@ def resample(r, s, dr):
     dr0 = r[1] - r[0]  # Constant timestep
 
     if dr0 < dr:
-        rnew = numpy.arange(r[0], r[-1]+0.5*dr, dr)
+        rnew = numpy.arange(r[0], r[-1] + 0.5 * dr, dr)
         snew = numpy.interp(rnew, r, s)
         return rnew, snew
 
     elif dr0 > dr:
-
         # Tried to pad the end of s to dampen, but nothing works.
-        #m = (s[-1] - s[-2]) / dr0
-        #b = (s[-2] * r[-1] - s[-1] * r[-2]) / dr0
-        #rpad = r[-1] + numpy.arange(1, len(s))*dr0
-        #spad = rpad * m + b
-        #spad = numpy.concatenate([s,spad])
-        #rnew = numpy.arange(0, rpad[-1], dr)
-        #snew = numpy.zeros_like(rnew)
-        ## Accomodate for the fact that r[0] might not be 0
-        #u = (rnew-r[0]) / dr0
-        #for n in range(len(spad)):
+        # m = (s[-1] - s[-2]) / dr0
+        # b = (s[-2] * r[-1] - s[-1] * r[-2]) / dr0
+        # rpad = r[-1] + numpy.arange(1, len(s))*dr0
+        # spad = rpad * m + b
+        # spad = numpy.concatenate([s,spad])
+        # rnew = numpy.arange(0, rpad[-1], dr)
+        # snew = numpy.zeros_like(rnew)
+        # Accomodate for the fact that r[0] might not be 0
+        # u = (rnew-r[0]) / dr0
+        # for n in range(len(spad)):
         #    snew += spad[n] * numpy.sinc(u - n)
 
-        #sel = numpy.logical_and(rnew >= r[0], rnew <= r[-1])
+        # sel = numpy.logical_and(rnew >= r[0], rnew <= r[-1])
 
         rnew = numpy.arange(0, r[-1], dr)
         snew = numpy.zeros_like(rnew)
-        u = (rnew-r[0]) / dr0
+        u = (rnew - r[0]) / dr0
         for n in range(len(s)):
             snew += s[n] * numpy.sinc(u - n)
         sel = numpy.logical_and(rnew >= r[0], rnew <= r[-1])
@@ -131,5 +132,6 @@ def resample(r, s, dr):
 
     # If we got here, then no resampling is required
     return r.copy(), s.copy()
+
 
 # End of file

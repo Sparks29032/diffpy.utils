@@ -40,11 +40,34 @@ Issues = "https://github.com/diffpy/diffpy.utils/issues"
 [tool.setuptools-git-versioning]
 enabled = true
 template = "{tag}"
-dev_template = "{tag}.post{ccount}"
-dirty_template = "{tag}.post{ccount}"
+dev_template = "{tag}"
+dirty_template = "{tag}"
 
 [tool.setuptools.packages.find]
 where = ["src"]  # list of folders that contain the packages (["."] by default)
 include = ["diffpy*"]  # package names should match these glob patterns (["*"] by default)
 exclude = ["diffpy.utils.tests*"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.black]
+line-length = 115
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | \.rst
+  | \.txt
+  | _build
+  | buck-out
+  | build
+  | dist
+
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+)/
+'''
